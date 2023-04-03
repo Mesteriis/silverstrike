@@ -18,15 +18,15 @@ def import_firefly(csv_path):
         account_type=models.AccountType.SYSTEM,
         defaults={'name': 'System Account'})
 
-    personal_accounts = dict()
-    foreign_accounts = dict()
+    personal_accounts = {}
+    foreign_accounts = {}
     for name, id, t in models.Account.objects.all().values_list('name', 'id', 'account_type'):
         if t == models.AccountType.PERSONAL:
             personal_accounts[name] = id
         elif t == models.AccountType.FOREIGN:
             foreign_accounts[name] = id
 
-    categories = dict()
+    categories = {}
     for name, id in models.Category.objects.all().values_list('name', 'id'):
         categories[name] = id
 

@@ -82,8 +82,8 @@ class Account(models.Model):
         transactions = list(Split.objects.prefetch_related('transaction').filter(
             account_id=self.pk).date_range(dstart, dend).order_by(
             '-transaction__date'))
-        for i in range(steps):
-            while len(transactions) > 0 and transactions[-1].transaction.date <= dstart:
+        for _ in range(steps):
+            while transactions and transactions[-1].transaction.date <= dstart:
                 t = transactions.pop()
                 balance += t.amount
             data_points.append((dstart, balance))

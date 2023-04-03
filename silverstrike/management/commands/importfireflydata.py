@@ -14,6 +14,6 @@ class Command(BaseCommand):
         try:
             import_firefly(options['file'])
         except FileNotFoundError:
-            raise CommandError('Could not open {} for writing'.format(options['file']))
+            raise CommandError(f"Could not open {options['file']} for writing")
         else:
-            print('Imported transactions from {}'.format(options['file']))
+            print(f"Imported transactions from {options['file']}")

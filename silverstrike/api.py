@@ -75,10 +75,7 @@ def _get_balances(request, dstart, dend, include_non_dashboard_accounts=False):
     data_points = []
     labels = []
     days = (dend - dstart).days
-    if days > 50:
-        step = days / 50 + 1
-    else:
-        step = 1
+    step = days / 50 + 1 if days > 50 else 1
     for split in splits:
         while split.date > dstart:
             data_points.append(balance)
@@ -97,9 +94,14 @@ def category_spending(request, dstart, dend):
         dend = datetime.datetime.strptime(dend, '%Y-%m-%d')
     except ValueError:
         return HttpResponseBadRequest(_('Invalid date format, expected yyyy-mm-dd'))
-    res = Split.objects.expense().past().date_range(dstart, dend).order_by('category').values(
-        'category__name').annotate(spent=models.Sum('amount'))
-    if res:
+    if (
+        res := Split.objects.expense()
+        .past()
+        .date_range(dstart, dend)
+        .order_by('category')
+        .values('category__name')
+        .annotate(spent=models.Sum('amount'))
+    ):
         res = [(e['category__name'] or 'No category', abs(e['spent'])) for e in res if e['spent']]
         categories, spent = zip(*res)
     else:

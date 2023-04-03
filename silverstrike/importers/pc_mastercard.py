@@ -26,7 +26,5 @@ def import_transactions(csv_path):
                     amount=-float(line[4])
                     ))
             except ValueError as e:
-                logger.error('Error' + e)
-                pass
-
+                logger.error(f'Error{e}')
     return lines

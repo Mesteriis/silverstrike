@@ -95,7 +95,7 @@ class AccountView(LoginRequiredMixin, generic.ListView):
         try:
             self.account = Account.objects.get(pk=self.kwargs['pk'])
         except Account.DoesNotExist:
-            raise Http404(_('Account with id {} could not be found'.format(self.kwargs['pk'])))
+            raise Http404(_(f"Account with id {self.kwargs['pk']} could not be found"))
         if self.account.account_type == AccountType.SYSTEM:
             return HttpResponse(_('Account not accessible'), status=403)
         if self.kwargs['period'] == 'all':
@@ -160,7 +160,7 @@ class ReconcileView(LoginRequiredMixin, generic.edit.CreateView):
         try:
             self.account = Account.objects.get(pk=self.kwargs['pk'])
         except Account.DoesNotExist:
-            raise Http404(_('Account with id {} could not be found'.format(self.kwargs['pk'])))
+            raise Http404(_(f"Account with id {self.kwargs['pk']} could not be found"))
         if self.account.account_type != AccountType.PERSONAL:
             return HttpResponse(_('You can not reconcile this account'), status=403)
         return super(ReconcileView, self).dispatch(request, *args, **kwargs)

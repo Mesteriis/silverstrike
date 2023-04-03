@@ -168,10 +168,10 @@ class CategoryDetailView(LoginRequiredMixin, generic.DetailView):
 
         context['sum_this_month'] = spent_this_month
         context['splits'] = splits
-        for account in account_spending.keys():
+        for account in account_spending:
             account_spending[account] = abs(account_spending[account])
 
-        for account in destination_spending.keys():
+        for account in destination_spending:
             destination_spending[account] = abs(destination_spending[account])
         context['account_spending'] = dict(account_spending)
         context['destination_spending'] = dict(destination_spending)
