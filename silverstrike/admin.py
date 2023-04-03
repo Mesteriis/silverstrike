@@ -36,8 +36,12 @@ class AccountAdmin(admin.ModelAdmin):
         for account in accounts:
             failure = False
             if account.account_type != models.AccountType.FOREIGN:
-                self.message_user(request, _(
-                    'You can only merge foreign accounts, "{}" isn\'t.'.format(account.name)))
+                self.message_user(
+                    request,
+                    _(
+                        f"""You can only merge foreign accounts, "{account.name}" isn\'t."""
+                    ),
+                )
                 failure = True
         if failure:
             return

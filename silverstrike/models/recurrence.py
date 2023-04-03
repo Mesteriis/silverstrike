@@ -115,7 +115,6 @@ class RecurringTransaction(models.Model):
                         break
                     except ValueError:
                         day -= 1
-                        pass
             if date.weekday() > 4 and self.interval not in [self.WEEKLY, self.DAILY]:
                 if self.weekend_handling == self.SKIP:
                     continue
@@ -157,9 +156,7 @@ class RecurringTransaction(models.Model):
     def average_amount(self):
         average = Split.objects.personal().recurrence(self.id).aggregate(
             models.Avg('amount'))['amount__avg']
-        if not average:
-            return '—'
-        return round(average, 2)
+        return round(average, 2) if average else '—'
 
     @classmethod
     def outstanding_transaction_sum(cls):

@@ -48,7 +48,7 @@ class TransactionSerializer(serializers.ModelSerializer):
     splits = SplitSerializer(many=True)
 
     def validate(self, data):
-        split_sum = sum([split['amount'] for split in data['splits']])
+        split_sum = sum(split['amount'] for split in data['splits'])
         if split_sum != 0:
             raise serializers.ValidationError("The sum of splits does not balance")
         return data

@@ -25,5 +25,4 @@ def import_transactions(csv_path):
             except ValueError as e:
                 # first line contains headers...
                 print(e)
-                pass
     return lines[1:-2]

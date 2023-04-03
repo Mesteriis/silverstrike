@@ -20,7 +20,7 @@ class Command(BaseCommand):
             try:
                 output = open(options['file'], 'w')
             except FileNotFoundError:
-                raise CommandError('Could not open {} for writing'.format(options['file']))
+                raise CommandError(f"Could not open {options['file']} for writing")
 
         splits = Split.objects.transfers_once().personal()
         csv_writer = csv.writer(output, delimiter=';')
@@ -37,4 +37,4 @@ class Command(BaseCommand):
             csv_writer.writerow(split)
         if options['file']:
             output.close()
-            print('Exported transactions to {}'.format(options['file']))
+            print(f"Exported transactions to {options['file']}")

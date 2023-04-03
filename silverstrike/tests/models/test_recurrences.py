@@ -29,7 +29,7 @@ class RecurrenceTests(TestCase):
         self.assertEqual(self.recurrence.average_amount, '—')
 
     def test_str_method(self):
-        self.assertEqual('{}'.format(self.recurrence), 'some recurrence')
+        self.assertEqual(f'{self.recurrence}', 'some recurrence')
 
     def test_absolute_url(self):
         self.assertEqual(self.recurrence.get_absolute_url(),
@@ -103,7 +103,9 @@ class RecurrenceTests(TestCase):
             t = create_transaction('meh', self.personal, self.foreign, i * 10, Transaction.WITHDRAW)
             t.recurrence = self.recurrence
             t.save()
-        self.assertEqual(self.recurrence.average_amount, -sum([i * 10 for i in range(1, 11)]) / 10)
+        self.assertEqual(
+            self.recurrence.average_amount, -sum(i * 10 for i in range(1, 11)) / 10
+        )
 
     def test_average_amount_for_deposits(self):
         for i in range(1, 11):
@@ -112,7 +114,9 @@ class RecurrenceTests(TestCase):
             t.save()
         self.recurrence.transaction_type = Transaction.DEPOSIT
         self.recurrence.save()
-        self.assertEqual(self.recurrence.average_amount, sum([i * 10 for i in range(1, 11)]) / 10)
+        self.assertEqual(
+            self.recurrence.average_amount, sum(i * 10 for i in range(1, 11)) / 10
+        )
 
     def test_outstanding_sum(self):
         # TODO add a test

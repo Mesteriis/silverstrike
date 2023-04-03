@@ -50,8 +50,8 @@ class ImportProcessView(LoginRequiredMixin, generic.TemplateView):
         context = super(ImportProcessView, self).get_context_data(**kwargs)
         file = models.ImportFile.objects.get(uuid=self.kwargs['uuid'])
         importer = file.importer
-        iban_accounts = dict()
-        names = dict()
+        iban_accounts = {}
+        names = {}
         for a in models.Account.objects.all():
             try:
                 for iban in json.loads(a.import_ibans):
@@ -83,12 +83,12 @@ class ImportProcessView(LoginRequiredMixin, generic.TemplateView):
         transactions = set()
         for t in models.Transaction.objects.date_range(min_date, max_date):
             if t.is_transfer:
-                transactions.add('{}-{}-{}'.format(t.src_id, t.date, t.amount))
-                transactions.add('{}-{}-{}'.format(t.dst_id, t.date, t.amount))
+                transactions.add(f'{t.src_id}-{t.date}-{t.amount}')
+                transactions.add(f'{t.dst_id}-{t.date}-{t.amount}')
             elif t.is_deposit:
-                transactions.add('{}-{}-{}'.format(t.src_id, t.date, t.amount))
+                transactions.add(f'{t.src_id}-{t.date}-{t.amount}')
             elif t.is_withdraw:
-                transactions.add('{}-{}-{}'.format(t.dst_id, t.date, t.amount))
+                transactions.add(f'{t.dst_id}-{t.date}-{t.amount}')
         for datum in context['data']:
             if hasattr(datum, 'suggested_account') and '{}-{}-{:.2f}'.format(
                     datum.suggested_account.id, datum.book_date, abs(datum.amount)) in transactions:
@@ -103,13 +103,13 @@ class ImportProcessView(LoginRequiredMixin, generic.TemplateView):
         importer = file.importer
         data = importers.IMPORTERS[importer].import_transactions(file.file.path)
         for i in range(len(data)):
-            title = request.POST.get('title-{}'.format(i), '')
-            account = request.POST.get('account-{}'.format(i), '')
-            recurrence = int(request.POST.get('recurrence-{}'.format(i), '-1'))
-            ignore = request.POST.get('ignore-{}'.format(i), '')
+            title = request.POST.get(f'title-{i}', '')
+            account = request.POST.get(f'account-{i}', '')
+            recurrence = int(request.POST.get(f'recurrence-{i}', '-1'))
+            ignore = request.POST.get(f'ignore-{i}', '')
             book_date = data[i].book_date
             date = data[i].transaction_date
-            if not (title and account) or ignore:
+            if not title or not account or ignore:
                 continue
             amount = float(data[i].amount)
             if amount == 0:

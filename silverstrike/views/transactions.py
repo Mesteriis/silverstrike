@@ -158,7 +158,7 @@ class SplitUpdate(LoginRequiredMixin, generic.edit.UpdateView):
             formset = self.formset_class(self.request.POST, instance=transaction)
             if formset.is_valid():
                 fields = [form.cleaned_data.get('amount') for form in formset]
-                split_sums = sum([x for x in fields if x is not None])
+                split_sums = sum(x for x in fields if x is not None)
                 if split_sums == 0:
                     transaction.save()
                     formset.save()
@@ -167,5 +167,6 @@ class SplitUpdate(LoginRequiredMixin, generic.edit.UpdateView):
                 else:
                     form.add_error(
                         '',
-                        'Sum of all splits has to be 0. You have {} remaining'.format(split_sums))
+                        f'Sum of all splits has to be 0. You have {split_sums} remaining',
+                    )
         return self.render_to_response(self.get_context_data(form=form))

@@ -36,10 +36,11 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         context['upcoming_recurrences'] = recurrences
         context['transactions'] = Split.objects.personal().transfers_once().past().select_related(
             'account', 'opposing_account', 'category', 'transaction')[:10]
-        outstanding = 0
-        for t in upcoming:
-            if t.transaction.transaction_type != Transaction.TRANSFER:
-                outstanding += t.amount
+        outstanding = sum(
+            t.amount
+            for t in upcoming
+            if t.transaction.transaction_type != Transaction.TRANSFER
+        )
         context['working_balance'] = context['balance'] + outstanding
         outstanding = 0
         for r in recurrences:

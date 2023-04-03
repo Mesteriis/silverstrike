@@ -25,8 +25,7 @@ def import_transactions(ofx_path):
                         amount=transaction.amount
                         ))
                 except ValueError:
-                    logger.error('Cannot import transaction: {}'.format(transaction))
-                    pass
+                    logger.error(f'Cannot import transaction: {transaction}')
         except ValueError:
             logger.error('Failed to import all transactions! Wrong file format?')
 

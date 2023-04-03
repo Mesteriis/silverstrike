@@ -7,7 +7,7 @@ def set_ibans(apps, schema_editor):
     Account = apps.get_model('silverstrike', 'Account')
     db_alias = schema_editor.connection.alias
     for a in Account.objects.using(db_alias).exclude(iban=''):
-        a.import_ibans = '["{}"]'.format(a.iban)
+        a.import_ibans = f'["{a.iban}"]'
         a.save()
 
 
